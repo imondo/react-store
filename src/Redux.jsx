@@ -8,7 +8,8 @@ function ReduxDemo(props) {
   // let [ count, setCount ] = useState(0)
   return (
     <div>
-      <div>{num}</div>
+      <h2>Redux</h2>
+      <p>点击数：{num}</p>
       <button onClick={add}>点击 +</button>
       <button onClick={sub}>点击 -</button>
     </div>
