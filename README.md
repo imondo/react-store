@@ -4,7 +4,6 @@
 
  - React Redux
  - Mobx
- - Redux-Saga
  - dva
 
 ### React Redux
@@ -245,3 +244,121 @@ export default inject('store')(observer(MobxDemo));
 ```
 
 组件通过 `inject` 注入我们需要传入的 `store`，组件通过 `props.store` 属性访问
+
+## dva
+
+> [文档](https://dvajs.com/guide/)
+
+`dva` 是一个的 React 应用框架，简化 API，让开发 React 应用更加方便和快捷。
+
+`dva = React-Router + Redux + Redux-saga`
+
+依赖安装
+
+```shell
+yarn add dva
+```
+
+## 使用
+
+需要实例化 `dva`
+
+```js
+import React from 'react'
+import dva, { connect } from 'dva';
+import dvaModel from './store/dva';
+import DvaDemo from './Dva.jsx'
+
+const createHistory = require("history").createHashHistory
+
+const history = createHistory()
+
+// 创建应用
+const app = dva({
+  history: createHistory()
+});
+app.model(dvaModel)
+// 注册视图
+app.router(() => <DvaDemo />);
+// 启动应用
+app.start('#app');
+```
+
+## model
+
+创建一个 `model` 数据，基本的属性
+
+- `namespace` 空间命名，全局唯一
+
+- `state` 初始数据
+
+- `reducers` 修改数据，类似 `vuex` 中的 `mutations`
+
+- `effects` 获取数据, 类似 `vuex` 中的 `action`
+
+- `subscription` 订阅数据
+
+```js
+const model = {
+  namespace: 'dvamodel',
+  state: {
+    name: 'model dva',
+    count: 0
+  },
+  reducers: {
+    add(state) {
+      state.count = state.count + 1
+      return {
+        ...state
+      }
+    },
+    sub(state) {
+      state.count = state.count - 1
+      return {
+        ...state
+      }
+    }
+  },
+  effects: {
+    *addCount(action, { call, put }) {
+      console.log(action, action.payload) // 拿到传入的 payload
+      yield put({type: 'add'})
+    },
+    *subCount(action, { call, put }) {
+      console.log(action, action.payload) // 拿到传入的 payload
+      yield put({type: 'sub'})
+    }
+  },
+}
+
+export default model
+```
+
+## 连接组件
+
+使用 `connect` 连接组件，都挂到 `props` 中去
+
+```jsx
+import React from 'react'
+import { connect } from 'dva'
+
+function DvaDemo({dvamodel, dispatch}) {
+  console.log(dvamodel) // 通过命令空间访问
+  return (
+    <div>
+      <h2>Dva</h2>
+      <p>点击数：{dvamodel.count}</p>
+      <button onClick={() => dispatch({
+        type: 'dvamodel/addCount',
+        payload: 1
+      })}>点击 +</button>
+      <button onClick={() => dispatch({
+        type: 'dvamodel/subCount',
+        payload: 1
+      })}>点击 -</button>
+    </div>
+  )
+}
+
+export default connect((props) => props)(DvaDemo);
+```
