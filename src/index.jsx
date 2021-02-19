@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import dva, { connect } from 'dva';
 import dvaModel from './store/dva';
-import DvaDemo from './Dva.jsx'
+import DvaDemo from './Dva.jsx';
 
 const createHistory = require("history").createHashHistory
 

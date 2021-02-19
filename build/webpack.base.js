@@ -5,7 +5,7 @@ const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = {
   entry: {
-    app: resolve('../src/index.js')
+    app: resolve('../src/index.jsx')
   },
   output: {
     path: resolve('../dist'),
